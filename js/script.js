@@ -32,77 +32,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let input;
 
-      // Special case for Straight
-      if (categoryName === "Straight" && i < 4) {
-        input = document.createElement('select');
-
-        const optionDefault = document.createElement('option');
-        optionDefault.value = "";
-        optionDefault.textContent = "-";
-        input.appendChild(optionDefault);
-
-        const optionSmall = document.createElement('option');
-        optionSmall.value = "35";
-        optionSmall.textContent = "Small Straight (35)";
-        input.appendChild(optionSmall);
-
-        const optionLarge = document.createElement('option');
-        optionLarge.value = "45";
-        optionLarge.textContent = "Large Straight (45)";
-        input.appendChild(optionLarge);
-
-        input.addEventListener('change', () => {
-          calculateTotals();
-        });
-      } else {
-        input = document.createElement('input');
-        input.type = 'number';
-        input.placeholder = "-";
-
-        if (["1", "2", "3", "4", "5", "6"].includes(categoryName)) {
-          const max = parseInt(categoryName) * 5;
-          input.min = 0;
-          input.max = max;
+      // Special handling for TOTAL row
+      if (categoryName === "Total (Ukupno)") {
+        if (i === 0) {
+          // First cell = static text "Total:"
+          inputDiv.classList.add('total-text');
+          inputDiv.textContent = "Total:";
+          grid.appendChild(inputDiv);
+          continue;
         }
-
-        if (["Subtotal", "Total (Ukupno)", "Sum 1-6 + Bonus", "Max - Min result"].includes(categoryName) || i === 4) {
+        if (i === 1) {
+          // Second cell = input for total value
+          input = document.createElement('input');
+          input.type = 'number';
+          input.placeholder = "-";
           input.readOnly = true;
-          inputDiv.classList.add('calculated');
-        } else {
-          input.addEventListener('input', () => {
-            limitInput(input);
-          });
-          input.addEventListener('blur', () => {
+          input.dataset.category = categoryName;
+          input.dataset.index = i;
+
+          inputDiv.appendChild(input);
+          grid.appendChild(inputDiv);
+          break; // After the second cell, stop
+        }
+      } else {
+        // Normal fields
+        if (categoryName === "Straight" && i < 4) {
+          input = document.createElement('select');
+
+          const optionDefault = document.createElement('option');
+          optionDefault.value = "";
+          optionDefault.textContent = "-";
+          input.appendChild(optionDefault);
+
+          const optionSmall = document.createElement('option');
+          optionSmall.value = "35";
+          optionSmall.textContent = "Small Straight (35)";
+          input.appendChild(optionSmall);
+
+          const optionLarge = document.createElement('option');
+          optionLarge.value = "45";
+          optionLarge.textContent = "Large Straight (45)";
+          input.appendChild(optionLarge);
+
+          input.addEventListener('change', () => {
             calculateTotals();
           });
+        } else {
+          input = document.createElement('input');
+          input.type = 'number';
+          input.placeholder = "-";
+
+          if (["1", "2", "3", "4", "5", "6"].includes(categoryName)) {
+            const max = parseInt(categoryName) * 5;
+            input.min = 0;
+            input.max = max;
+          }
+
+          if (["Subtotal", "Sum 1-6 + Bonus", "Max - Min result"].includes(categoryName) || i === 4) {
+            input.readOnly = true;
+            inputDiv.classList.add('calculated');
+          } else {
+            input.addEventListener('input', () => {
+              limitInput(input);
+            });
+            input.addEventListener('blur', () => {
+              calculateTotals();
+            });
+          }
         }
+
+        input.dataset.category = categoryName;
+        input.dataset.column = columns[i + 1] || "Row Sum";
+        input.dataset.index = i;
+
+        inputDiv.appendChild(input);
+
+        // Bonus hint for special fields
+        if (["2 pairs", "Full", "Poker", "Yamb"].includes(categoryName) && i < 4) {
+          const bonusHint = document.createElement('span');
+          bonusHint.className = 'bonus-hint';
+          bonusHint.style.fontSize = '0.7em';
+          bonusHint.style.color = '#4CAF50';
+          bonusHint.style.display = 'block';
+          bonusHint.style.marginTop = '2px';
+          inputDiv.appendChild(bonusHint);
+        }
+
+        grid.appendChild(inputDiv);
       }
-
-      // Common properties
-      input.dataset.category = categoryName;
-      input.dataset.column = columns[i + 1] || "Row Sum";
-      input.dataset.index = i;
-
-      inputDiv.appendChild(input);
-
-      // Add bonus hint if needed
-      if (["2 pairs", "Full", "Poker", "Yamb"].includes(categoryName) && i < 4) {
-        const bonusHint = document.createElement('span');
-        bonusHint.className = 'bonus-hint';
-        bonusHint.style.fontSize = '0.7em';
-        bonusHint.style.color = '#4CAF50'; // green
-        bonusHint.style.display = 'block';
-        bonusHint.style.marginTop = '2px';
-        inputDiv.appendChild(bonusHint);
-      }
-
-      grid.appendChild(inputDiv);
     }
   });
 
   function limitInput(input) {
     const value = parseInt(input.value);
-
     if (input.max && value > parseInt(input.max)) {
       input.value = input.max;
     }
@@ -115,32 +137,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const columnData = [[], [], [], []];
     const allInputs = document.querySelectorAll('#yambGrid input, #yambGrid select');
 
-    // Reset calculated fields
     allInputs.forEach(input => {
-      if (["Subtotal", "Total (Ukupno)", "Sum 1-6 + Bonus", "Max - Min result"].includes(input.dataset.category) || input.dataset.index == 4) {
+      if (["Subtotal", "Sum 1-6 + Bonus", "Max - Min result"].includes(input.dataset.category) || input.dataset.index == 4) {
         input.value = '';
       }
       const bonusHint = input.parentElement.querySelector('.bonus-hint');
-      if (bonusHint) {
-        bonusHint.textContent = '';
-      }
+      if (bonusHint) bonusHint.textContent = '';
     });
 
-    // Fill column data
     allInputs.forEach(input => {
       const category = input.dataset.category;
       const index = input.dataset.index;
-      let value;
-
-      if (input.tagName === "SELECT") {
-        value = parseInt(input.value);
-      } else {
-        value = parseInt(input.value);
-      }
+      let value = (input.tagName === "SELECT") ? parseInt(input.value) : parseInt(input.value);
 
       const bonusHint = input.parentElement.querySelector('.bonus-hint');
 
-      // Validate multiples properly
       if (["1", "2", "3", "4", "5", "6"].includes(category)) {
         const base = parseInt(category);
         if (!isNaN(value) && value % base !== 0) {
@@ -149,33 +160,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Adjust bonuses and show bonus hints
       if (category === "2 pairs") {
         if (value) {
           if (bonusHint) bonusHint.textContent = `${value} +10 = ${value + 10}`;
           value += 10;
-        } else if (bonusHint) bonusHint.textContent = '';
+        }
       }
       if (category === "Full") {
         if (value) {
           if (bonusHint) bonusHint.textContent = `${value} +30 = ${value + 30}`;
           value += 30;
-        } else if (bonusHint) bonusHint.textContent = '';
+        }
       }
       if (category === "Poker") {
         if (value) {
           if (bonusHint) bonusHint.textContent = `${value} +40 = ${value + 40}`;
           value += 40;
-        } else if (bonusHint) bonusHint.textContent = '';
+        }
       }
       if (category === "Yamb") {
         if (value) {
           if (bonusHint) bonusHint.textContent = `${value} +50 = ${value + 50}`;
           value += 50;
-        } else if (bonusHint) bonusHint.textContent = '';
+        }
       }
 
-      if (index !== undefined && index < 4 && !["Subtotal", "Total (Ukupno)", "Sum 1-6 + Bonus", "Max - Min result"].includes(category)) {
+      if (index !== undefined && index < 4 && !["Subtotal", "Sum 1-6 + Bonus", "Max - Min result"].includes(category)) {
         columnData[index].push({ category, value: value || 0 });
       }
     });
@@ -240,11 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const grandTotal = (rowSums["Sum 1-6 + Bonus"] || 0) + (rowSums["Max - Min result"] || 0) + (rowSums["Subtotal"] || 0);
 
-    allInputs.forEach(input => {
-      if (input.dataset.category === "Total (Ukupno)" && parseInt(input.dataset.index) === 4) {
-        input.value = grandTotal;
-      }
-    });
+    setInputValue("Total (Ukupno)", 1, grandTotal);
   }
 
   function setInputValue(category, index, value) {
