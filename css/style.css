@@ -29,6 +29,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
 }
 
 .header {
@@ -53,6 +54,7 @@ input, select {
   text-align: center;
   background: transparent;
   outline: none;
+  border-radius: 8px;
 }
 
 .grid-item.empty {

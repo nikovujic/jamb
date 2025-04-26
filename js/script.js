@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let input;
       if (categoryName === "Straight" && i < 4) {
         input = document.createElement('select');
-        const options = ["-", "Small Straight (35)", "Large Straight (45)"];
+        const options = ["-", "Small (35)", "Large (45)"];
         options.forEach(opt => {
           const option = document.createElement('option');
           option.value = opt.includes("(") ? opt.match(/\((\d+)\)/)[1] : "";
