@@ -1,6 +1,6 @@
 // --- Wait for DOM to load ---
 document.addEventListener('DOMContentLoaded', () => {
-  const columns = ["", "Down", "Up", "Free", "Announcement", "Row Sum"];
+  const columns = ["", "Down", "Up", "Free", "Najava", "Row Sum"];
   const categories = [
     "1", "2", "3", "4", "5", "6",
     "Sum 1-6 + Bonus",
