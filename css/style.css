@@ -1,0 +1,71 @@
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 10px;
+  background-color: #fafafa;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Grid layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr; /* +1 for Row Sum */
+  gap: 2px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Grid Items */
+.grid-item {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: center;
+  background: #fff;
+  min-height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  background: #eee;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.category {
+  background: #f9f9f9;
+  font-weight: bold;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  text-align: center;
+  background: transparent;
+  outline: none;
+}
+
+/* Remove arrows from number inputs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Special fields */
+.subtotal, .total, .calculated {
+  background: #e9f7ef;
+  font-weight: bold;
+}
+
