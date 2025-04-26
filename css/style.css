@@ -1,48 +1,61 @@
 /* General styles */
 body {
-  font-family: Arial, sans-serif;
-  margin: 10px;
-  background-color: #fafafa;
+  font-family: monospace, Arial, sans-serif;
+  margin: 20px;
+  background-color: #fff;
+  color: #000;
 }
 
 .title {
   text-align: center;
   margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 24px;
 }
 
 /* Grid layout */
 .grid-container {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr; /* Category + 4 inputs + Row Sum */
-  gap: 2px;
-  max-width: 750px;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 4px; /* Brutalist = bigger gaps */
+  max-width: 800px;
   margin: 0 auto;
 }
 
 /* Grid Items */
 .grid-item {
-  border: 1px solid #ccc;
-  padding: 6px;
+  border: 2px solid #000; /* Thicker, black borders */
+  padding: 8px;
   text-align: center;
   background: #fff;
-  min-height: 40px;
+  min-height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
-}
-
-.header {
-  background: #eee;
   font-weight: bold;
   font-size: 16px;
 }
 
-.category {
-  background: #f9f9f9;
+/* Header */
+.header {
+  background: #eee;
   font-weight: bold;
+  font-size: 18px;
+}
+
+/* Category cells */
+.category {
+  background: #f4f4f4;
   text-align: left;
-  padding-left: 8px;
+  padding-left: 10px;
+}
+
+/* Special "Total" category */
+.category.total {
+  background: #000;
+  color: #fff;
+  text-align: right;
+  padding-right: 10px;
 }
 
 /* Inputs */
@@ -50,28 +63,34 @@ input, select {
   width: 100%;
   height: 40px;
   font-size: 16px;
-  border: none;
-  text-align: center;
-  background: transparent;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
   outline: none;
-  border-radius: 8px;
+  text-align: center;
 }
 
+/* Empty Cells */
 .grid-item.empty {
   background: none;
   border: none;
-  box-shadow: none;
   pointer-events: none;
 }
 
-.category.total {
-  text-align: right;
-  padding-right: 10px;
-  background: #f0f0f0; /* Optional: nicer visual */
+/* Special calculated fields */
+.calculated {
+  background: #d3d3d3;
+  font-weight: bold;
 }
 
+/* Bonus hint styling */
+.bonus-hint {
+  font-size: 10px;
+  color: #000;
+  margin-top: 2px;
+}
 
-/* Remove arrows from number inputs */
+/* Remove number spinners */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -81,22 +100,3 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* Special fields */
-.subtotal, .total, .calculated {
-  background: #e9f7ef;
-  font-weight: bold;
-}
-
-/* Special for Total text */
-.total-text {
-  background: #eee;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* Bonus hint styling */
-.bonus-hint {
-  font-size: 12px;
-  color: #4CAF50;
-  margin-top: 2px;
-}
