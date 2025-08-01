@@ -1,4 +1,3 @@
-// --- Wait for DOM to load ---
 document.addEventListener('DOMContentLoaded', () => {
   const columns = ["", "Down", "Up", "Free", "Najava", "Row Sum"];
   const categories = [
@@ -8,12 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     "Max - Min result",
     "2 pairs", "Straight", "Full", "Poker", "Yamb",
     "Subtotal"
-    // Total will be created manually after
   ];
 
   const grid = document.getElementById('yambGrid');
 
-  // --- Create Header ---
   columns.forEach(columnName => {
     const div = document.createElement('div');
     div.className = 'grid-item header';
@@ -25,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.appendChild(div);
   });
 
-  // --- Create normal rows ---
   categories.forEach(categoryName => {
     const categoryDiv = document.createElement('div');
     categoryDiv.className = 'grid-item category';
@@ -86,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Create the Total row manually ---
   for (let i = 0; i < 4; i++) {
     const emptyDiv = document.createElement('div');
     emptyDiv.className = 'grid-item empty';
@@ -111,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
   totalInputDiv.appendChild(totalInput);
   grid.appendChild(totalInputDiv);
 
-  // --- Functions ---
 
   function limitInput(input) {
     const value = parseInt(input.value);
